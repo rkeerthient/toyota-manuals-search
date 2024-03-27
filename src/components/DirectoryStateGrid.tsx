@@ -36,8 +36,7 @@ const DirectoryStateGrid = ({
   if (directoryChildren) {
     sortedChildren = directoryChildren?.sort(sortByName) || [];
     childrenDivs = sortedChildren.map((child: any) => {
-      let img = child.dm_directoryChildren[0].photoGallery[0].image.url;
-
+      let img = child.dm_directoryChildren?.[0]?.photoGallery?.[0]?.image?.url;
       return (
         <a
           href="/search.html"
