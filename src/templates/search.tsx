@@ -146,6 +146,32 @@ export const SearchPane = () => {
       queryParams.delete("verticalKey");
     }
     history.pushState(null, "", "?" + queryParams.toString());
+    if (filterCar) {
+      searchActions.setStaticFilters([
+        {
+          selected: true,
+          filter: {
+            kind: "fieldValue",
+            fieldId: "c_production_years",
+            value: filterCar,
+            matcher: Matcher.Equals,
+          },
+        },
+      ]);
+    }
+    if (filterYear) {
+      searchActions.setStaticFilters([
+        {
+          selected: true,
+          filter: {
+            kind: "fieldValue",
+            fieldId: "c_production_years",
+            value: filterYear,
+            matcher: Matcher.Equals,
+          },
+        },
+      ]);
+    }
     currentVertical
       ? (searchActions.setVertical(currentVertical),
         searchActions.executeVerticalQuery().then(() => setIsLoading(false)))
