@@ -69,7 +69,7 @@ const verticals = [
     name: "Manuals(Classic)",
     verticalKey: "manual",
     cardType: ManualRegular,
-    classes: "grid grid-cols-3 gap-4",
+    classes: "",
   },
   {
     name: "Manuals(Lexical)",

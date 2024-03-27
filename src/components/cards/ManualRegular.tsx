@@ -2,34 +2,28 @@ import { CardProps } from "@yext/search-ui-react";
 import Ce_manual from "../../types/manual";
 
 const ManualRegular = ({ result }: CardProps<Ce_manual>) => {
- 
-  const { description, c_primaryCTA, c_secondaryCTA } = result.rawData;
+  const {
+    description,
+    c_primaryCTA,
+    c_carmodel_type,
+    c_secondaryCTA,
+    c_productionDate,
+    s_snippet,
+  } = result.rawData;
   const { name: _name, segment } = result;
   const { c_manual_file, photoGallery } = result.rawData;
   const { url, name, size, mimeType } = c_manual_file;
   return (
-    <div className="border p-4 font-semibold leading-6 text-gray-900 group-hover:text-gray-600 flex flex-col gap-4">
-      <img src={photoGallery[0].image.url} alt="" />
-      <div>{name}</div>
-
-      <div className="text-sm text-gray-500">{description}</div>
-      <div className="flex text-sm items-center gap-4">
-        {c_primaryCTA && (
-          <a
-            href={c_primaryCTA.link}
-            className="relative border z-10 bg-gray-50 px-3 py-1.5 font-medium text-[#218a3c] hover:bg-gray-100"
-          >
-            {c_primaryCTA.label}
+    <div className="border items-center p-4 font-semibold leading-6 text-gray-900 group-hover:text-gray-600 flex  gap-4">
+      <img src={photoGallery[0].image.url} alt="" className="h-36 w-36" />
+      <div className="flex flex-col gap-2">
+        <div>
+          <a href={url} target="_blank">
+            {_name} - {c_carmodel_type}
           </a>
-        )}
-        {c_secondaryCTA && (
-          <a
-            href={c_secondaryCTA.link}
-            className="relative border z-10 bg-gray-50 px-3 py-1.5 font-medium text-[#218a3c] hover:bg-gray-100"
-          >
-            {c_secondaryCTA.label}
-          </a>
-        )}
+        </div>
+        <div className="text-gray-500 text-sm">{c_productionDate}</div>
+        <div className="text-sm text-gray-500">{s_snippet}</div>
       </div>
     </div>
   );
