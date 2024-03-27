@@ -18,7 +18,7 @@ const ManualRegular = ({ result }: CardProps<Ce_manual>) => {
       <img src={photoGallery[0].image.url} alt="" className="h-36 w-36" />
       <div className="flex flex-col gap-2">
         <div>
-          <a href={url} target="_blank">
+          <a href={url} target="_blank" className="hover:underline">
             {_name} - {c_carmodel_type}
           </a>
         </div>
