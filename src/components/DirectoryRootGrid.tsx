@@ -24,7 +24,9 @@ const DirectoryRootGrid = ({
 }: DirectoryRootProps) => {
   const sortedChildren = directoryChildren?.sort(sortChildrenByName) || [];
 
-  const handleClick = (childName: string) => {};
+  const handleClick = (childName: string) => {
+    localStorage.setItem("carName", childName);
+  };
 
   const childrenDivs = sortedChildren.map((child: any) => (
     <a

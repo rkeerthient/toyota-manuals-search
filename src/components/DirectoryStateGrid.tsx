@@ -23,7 +23,9 @@ const DirectoryStateGrid = ({
   directoryChildren,
   relativePrefixToRoot,
 }: DirectoryGridProps) => {
-  const handleClick = (childName: string) => {};
+  const handleClick = (childName: string) => {
+    localStorage.setItem("carYear", childName);
+  };
 
   let sortedChildren;
   let childrenDivs;
@@ -33,7 +35,7 @@ const DirectoryStateGrid = ({
       let img = child.dm_directoryChildren?.[0]?.photoGallery?.[0]?.image?.url;
       return (
         <a
-          href="/search.html"
+          href="/search.html?verticalKey=manual"
           key={child.slug}
           onClick={() => handleClick(child.name)}
           className="border p-4 bg-white hover:underline hover:cursor-pointer"

@@ -101,6 +101,12 @@ export const SearchPane = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    queryParams.get("verticalKey") &&
+      setCurrentVertical(queryParams.get("verticalKey"));
+  }, []);
+
+  useEffect(() => {
     setIsLoading(true);
     searchTerm && searchActions.setQuery(searchTerm);
     const queryParams = new URLSearchParams(window.location.search);
@@ -118,15 +124,62 @@ export const SearchPane = () => {
 
     currentVertical
       ? (searchActions.setVertical(currentVertical),
-        searchActions.executeVerticalQuery().then(() => setIsLoading(false)))
+        localStorage.getItem("carName") &&
+          localStorage.getItem("carYear") &&
+          searchActions.setStaticFilters([
+            {
+              selected: true,
+              displayName: localStorage.getItem("carName"),
+              filter: {
+                kind: "fieldValue",
+                fieldId: "c_carmodel",
+                value: localStorage.getItem("carName"),
+                matcher: Matcher.Equals,
+              },
+            },
+            {
+              selected: true,
+              displayName: localStorage.getItem("carYear"),
+              filter: {
+                kind: "fieldValue",
+                fieldId: "c_carmodel",
+                value: localStorage.getItem("carYear"),
+                matcher: Matcher.Equals,
+              },
+            },
+          ]),
+        searchActions.executeVerticalQuery().then(() => {
+          localStorage.clear();
+          setIsLoading(false);
+        }))
       : (searchActions.setUniversal(),
+        localStorage.getItem("carName") &&
+          localStorage.getItem("carYear") &&
+          searchActions.setStaticFilters([
+            {
+              selected: true,
+              displayName: localStorage.getItem("carName"),
+              filter: {
+                kind: "fieldValue",
+                fieldId: "c_carmodel",
+                value: localStorage.getItem("carName"),
+                matcher: Matcher.Equals,
+              },
+            },
+            {
+              selected: true,
+              displayName: localStorage.getItem("carYear"),
+              filter: {
+                kind: "fieldValue",
+                fieldId: "c_carmodel",
+                value: localStorage.getItem("carYear"),
+                matcher: Matcher.Equals,
+              },
+            },
+          ]),
         searchActions.setUniversalLimit(verticalLimit),
-        searchActions.executeUniversalQuery().then((res) => {
-          setVectorResults(
-            res!.verticalResults.find(
-              (item) => item.source === "DOCUMENT_VERTICAL"
-            )?.results || []
-          );
+        searchActions.executeUniversalQuery().then(() => {
+          localStorage.clear();
           setIsLoading(false);
         }));
   }, [currentVertical, searchTerm]);
