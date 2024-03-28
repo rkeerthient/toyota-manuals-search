@@ -4,7 +4,6 @@ import {
   useSearchState,
 } from "@yext/search-headless-react";
 import * as React from "react";
-import { useSearchTermContext } from "../common/searchTermContext";
 
 interface DirectoryRootProps {
   name?: string;
@@ -24,12 +23,8 @@ const DirectoryRootGrid = ({
   relativePrefixToRoot,
 }: DirectoryRootProps) => {
   const sortedChildren = directoryChildren?.sort(sortChildrenByName) || [];
-  const { setFilterCar } = useSearchTermContext();
 
-  const searchActions = useSearchActions();
-  const handleClick = (childName: string) => {
-    setFilterCar(childName);
-  };
+  const handleClick = (childName: string) => {};
 
   const childrenDivs = sortedChildren.map((child: any) => (
     <a

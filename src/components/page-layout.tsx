@@ -6,7 +6,6 @@ import {
   provideHeadless,
 } from "@yext/search-headless-react";
 import searchConfig from "./searchConfig";
-import { SearchTermProvider } from "../common/searchTermContext";
 
 type Props = {
   _site?: Site;
@@ -15,14 +14,12 @@ type Props = {
 
 const PageLayout = ({ _site, children }: Props) => {
   return (
-    <SearchTermProvider>
-      <SearchHeadlessProvider searcher={provideHeadless(searchConfig)}>
-        <div className="min-h-screen">
-          <Header></Header>
-          {children}
-        </div>
-      </SearchHeadlessProvider>
-    </SearchTermProvider>
+    <SearchHeadlessProvider searcher={provideHeadless(searchConfig)}>
+      <div className="min-h-screen">
+        <Header></Header>
+        {children}
+      </div>
+    </SearchHeadlessProvider>
   );
 };
 

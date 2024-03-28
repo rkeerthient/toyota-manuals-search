@@ -10,7 +10,6 @@ import {
   Matcher,
   UniversalLimit,
   useSearchActions,
-  useSearchState,
 } from "@yext/search-headless-react";
 import {
   AppliedFilters,
@@ -26,7 +25,6 @@ import {
   onSearchFunc,
 } from "@yext/search-ui-react";
 import { useEffect, useState } from "react";
-import { useSearchTermContext } from "../common/searchTermContext";
 import Loader from "../components/Loader";
 import FAQ from "../components/cards/FAQ";
 import ManualLexical from "../components/cards/ManualLexical";
@@ -101,35 +99,6 @@ export const SearchPane = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [vectorResults, setVectorResults] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const { filterCar, filterYear } = useSearchTermContext();
-  useEffect(() => {
-    if (filterCar) {
-      searchActions.setStaticFilters([
-        {
-          selected: true,
-          filter: {
-            kind: "fieldValue",
-            fieldId: "c_production_years",
-            value: filterCar,
-            matcher: Matcher.Equals,
-          },
-        },
-      ]);
-    }
-    if (filterYear) {
-      searchActions.setStaticFilters([
-        {
-          selected: true,
-          filter: {
-            kind: "fieldValue",
-            fieldId: "c_production_years",
-            value: filterYear,
-            matcher: Matcher.Equals,
-          },
-        },
-      ]);
-    }
-  }, [filterCar, filterYear]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -146,32 +115,7 @@ export const SearchPane = () => {
       queryParams.delete("verticalKey");
     }
     history.pushState(null, "", "?" + queryParams.toString());
-    if (filterCar) {
-      searchActions.setStaticFilters([
-        {
-          selected: true,
-          filter: {
-            kind: "fieldValue",
-            fieldId: "c_production_years",
-            value: filterCar,
-            matcher: Matcher.Equals,
-          },
-        },
-      ]);
-    }
-    if (filterYear) {
-      searchActions.setStaticFilters([
-        {
-          selected: true,
-          filter: {
-            kind: "fieldValue",
-            fieldId: "c_production_years",
-            value: filterYear,
-            matcher: Matcher.Equals,
-          },
-        },
-      ]);
-    }
+
     currentVertical
       ? (searchActions.setVertical(currentVertical),
         searchActions.executeVerticalQuery().then(() => setIsLoading(false)))
