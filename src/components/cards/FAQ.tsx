@@ -6,7 +6,6 @@ import Markdown from "markdown-to-jsx";
 const FAQ = ({ result }: CardProps<Faq>) => {
   const { name } = result;
   const { c_answerMarkdown } = result.rawData;
-  console.log(c_answerMarkdown);
 
   return (
     <div className="border p-2">

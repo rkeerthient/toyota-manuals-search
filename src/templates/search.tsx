@@ -31,6 +31,10 @@ import ManualLexical from "../components/cards/ManualLexical";
 import ManualRegular from "../components/cards/ManualRegular";
 import PageLayout from "../components/page-layout";
 import "../index.css";
+import { useChatActions, useChatState } from "@yext/chat-headless-react";
+import { useChatModeContext } from "../hooks";
+import AiAnswer from "../components/AiAnswer";
+import { cn } from "../utils/cn";
 
 export const config: TemplateConfig = {
   name: "search",
@@ -99,6 +103,10 @@ export const SearchPane = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [vectorResults, setVectorResults] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const chatActions = useChatActions();
+  const { chatMode, setChatMode } = useChatModeContext();
+  const messages = useChatState((s) => s.conversation.messages);
+  const [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
@@ -122,6 +130,8 @@ export const SearchPane = () => {
     }
     history.pushState(null, "", "?" + queryParams.toString());
 
+    chatActions.restartConversation();
+    chatActions.getNextMessage(searchTerm);
     currentVertical
       ? (searchActions.setVertical(currentVertical),
         localStorage.getItem("carName") &&
@@ -185,6 +195,7 @@ export const SearchPane = () => {
   }, [currentVertical, searchTerm]);
 
   const handleSearch: onSearchFunc = (searchEventData) => {
+    setHasSearched(true);
     const { query } = searchEventData;
     query && setSearchTerm(query);
   };
@@ -211,6 +222,11 @@ export const SearchPane = () => {
             onSearch={handleSearch}
             placeholder="Ask questions about your policies or account"
           ></SearchBar>
+          <section
+            className={cn("flex flex-col gap-10", !hasSearched && "hidden")}
+          >
+            <AiAnswer />
+          </section>
           <div className="border-b-2">
             <div className="w-full px-8 flex justify-between  items-center text-lg font-semibold">
               {verticals.map((item, index) => (

@@ -5,7 +5,9 @@ import {
   SearchHeadlessProvider,
   provideHeadless,
 } from "@yext/search-headless-react";
-import searchConfig from "./searchConfig";
+import { chatConfig, searchConfig } from "./searchConfig";
+import { ChatHeadlessProvider } from "@yext/chat-headless-react";
+import { ChatModeContextProvider } from "./ChatModeContext";
 
 type Props = {
   _site?: Site;
@@ -15,10 +17,14 @@ type Props = {
 const PageLayout = ({ _site, children }: Props) => {
   return (
     <SearchHeadlessProvider searcher={provideHeadless(searchConfig)}>
-      <div className="min-h-screen">
-        <Header></Header>
-        {children}
-      </div>
+      <ChatHeadlessProvider config={chatConfig}>
+        <ChatModeContextProvider>
+          <div className="min-h-screen">
+            <Header></Header>
+            {children}
+          </div>
+        </ChatModeContextProvider>
+      </ChatHeadlessProvider>
     </SearchHeadlessProvider>
   );
 };
