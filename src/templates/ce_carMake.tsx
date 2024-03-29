@@ -110,7 +110,6 @@ const CarMake: Template<TemplateRenderProps> = ({
     dm_directoryChildren,
     photoGallery,
   } = document;
-  console.log(JSON.stringify(photoGallery));
 
   return (
     <>

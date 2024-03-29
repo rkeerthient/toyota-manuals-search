@@ -14,7 +14,6 @@ const ManualLexical = ({ result }: CardProps<Ce_manual>) => {
   const { name: _name, segment } = result;
   const { c_manual_file, photoGallery } = result.rawData;
   const { url, name, size, mimeType } = c_manual_file;
-  console.log(JSON.stringify(result));
 
   return (
     <div className="border items-center p-4 font-semibold leading-6 text-gray-900 group-hover:text-gray-600 flex  gap-4">
