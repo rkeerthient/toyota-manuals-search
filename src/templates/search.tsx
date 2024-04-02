@@ -189,7 +189,7 @@ export const SearchPane = () => {
           ]),
         searchActions.setUniversalLimit(verticalLimit),
         searchActions.executeUniversalQuery().then(() => {
-          localStorage.clear();
+          // localStorage.clear();
           setIsLoading(false);
         }));
   }, [currentVertical, searchTerm]);
