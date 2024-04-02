@@ -117,6 +117,7 @@ const Inner = ({ dm_directoryChildren, relativePrefixToRoot }: any) => {
       <>
         <div className="flex justify-between gap-8">
           <FilterSearch
+            placeholder="車種を検索"
             searchOnSelect={true}
             customCssClasses={{
               filterSearchContainer: "w-1/2 h-14 mt-4 rounded-full",
@@ -126,6 +127,7 @@ const Inner = ({ dm_directoryChildren, relativePrefixToRoot }: any) => {
             ]}
           />
           <FilterSearch
+            placeholder="製造年を検索"
             customCssClasses={{
               filterSearchContainer: "w-1/2 h-14 mt-4 rounded-full",
             }}

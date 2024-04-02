@@ -220,7 +220,7 @@ export const SearchPane = () => {
         <div className="flex flex-col gap-4 p-4">
           <SearchBar
             onSearch={handleSearch}
-            placeholder="Ask questions about your policies or account"
+            placeholder="検索語句を入れてください"
           ></SearchBar>
           <section
             className={cn("flex flex-col gap-10", !hasSearched && "hidden")}
