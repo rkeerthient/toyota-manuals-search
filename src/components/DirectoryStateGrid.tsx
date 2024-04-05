@@ -35,7 +35,7 @@ const DirectoryStateGrid = ({
       let img = child.dm_directoryChildren?.[0]?.photoGallery?.[0]?.image?.url;
       return (
         <a
-          href="/search.html?verticalKey=manual"
+          href="/search.html?verticalKey=manual_lexical"
           key={child.slug}
           onClick={() => handleClick(child.name)}
           className="border p-4 bg-white hover:underline hover:cursor-pointer"
