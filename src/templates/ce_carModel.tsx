@@ -39,8 +39,6 @@ export const config: TemplateConfig = {
       "dm_directoryChildren.dm_directoryChildren.photoGallery",
       "dm_directoryChildren.slug",
       "dm_directoryChildren.photoGallery",
-      "dm_directoryChildren.dm_childEntityIds",
-      "dm_childEntityIds",
     ],
     localization: {
       locales: ["ja"],

@@ -46,7 +46,8 @@ export const config: TemplateConfig = {
       "slug",
       "dm_directoryChildren.name",
       "dm_directoryChildren.slug",
-      "dm_directoryChildren.dm_childEntityIds",
+      "dm_directoryChildren.dm_directoryChildren.name",
+      "dm_directoryChildren.dm_directoryChildren.slug",
     ],
     localization: {
       locales: ["ja"],
@@ -82,6 +83,7 @@ const Index: Template<TemplateRenderProps> = ({
   document,
 }) => {
   const { dm_directoryChildren } = document;
+
   return (
     <>
       <PageLayout>
@@ -98,59 +100,62 @@ const Inner = ({ dm_directoryChildren, relativePrefixToRoot }: any) => {
   const [showDir, setShowDir] = useState<boolean>(true);
   const searchActions = useSearchActions();
   useSearchState((state) => state.filters);
-  const [customModelFacets, setCustomModelFacets] = useState([]);
-  const [customYearFacets, setCustomYearFacets] = useState([]);
+  const [customModelFacets, setCustomModelFacets] = useState<string[]>([
+    "Select Car",
+  ]);
+  const [customYearFacets, setCustomYearFacets] = useState<string[]>([]);
   const isLoading =
     useSearchState((state) => state.searchStatus.isLoading) || false;
-  const [selected, setSelected] = useState(customModelFacets[0]);
-  console.log(useSearchState((state) => state.filters.facets));
-  useEffect(() => {
-    console.log(`anain`);
+  const [selectedModel, setSelectedModel] = useState<string>("Select Car");
+  const [selectedYears, setSelectedYears] = useState<string>("Select Years");
 
-    searchActions.setVertical("manual");
-    searchActions
-      .executeVerticalQuery()
-      .then((res) =>
-        setCustomModelFacets(
-          res?.facets
-            ?.filter((item) => item.fieldId === "c_carmodel")
-            .flatMap((item) => item.options.map((option) => option.displayName))
-        )
-      );
+  useEffect(() => {
+    const names = dm_directoryChildren.flatMap((item: any) => item.name);
+    setCustomModelFacets(names);
   }, []);
+
+  useEffect(() => {
+    const years = dm_directoryChildren
+      .filter((item: any) => item.name === selectedModel)
+      .flatMap((item: any) =>
+        item.dm_directoryChildren.map((subItem: any) => subItem.name)
+      );
+
+    setCustomYearFacets(years);
+  }, [selectedModel]);
+
+  useEffect(() => {
+    if (selectedModel !== "Select Car" && selectedYears != "Select Years") {
+      searchActions.setVertical("manual");
+      searchActions.setQuery(`${selectedModel}, ${selectedYears}`);
+      searchActions.executeVerticalQuery().then((res) => setShowDir(false));
+    }
+  }, [selectedModel, selectedYears]);
 
   useEffect(() => {
     if (!isLoading) {
       let _filters: SelectableStaticFilter[] =
         searchActions.state.filters.static!;
       let y = _filters && _filters.some((item) => item.selected === true);
+
       setShowDir(!y || false);
+      if (!showDir) {
+        setSelectedModel("Select Car");
+        setSelectedYears("Select Year");
+      }
     }
   }, [searchActions.state.filters.facets]);
-
-  useEffect(() => {
-    console.log(`entered`);
-
-    searchActions.setQuery(selected);
-    searchActions
-      .executeVerticalQuery()
-      .then((res) =>
-        console.log(useSearchState((state) => state.filters.facets))
-      );
-  }, [selected]);
 
   return (
     <div className="!my-4 space-y-2 pb-12 px-10 bg-[#f2f2f2]">
       <>
-        <div className="flex justify-between gap-8">
-          {/*Filter 1 */}
-
-          {/* {customModelFacets && (
-            <div className="fixed top-16 w-72">
-              <Listbox value={selected} onChange={setSelected}>
+        <div className="flex pt-4 gap-8 justify-between items-center">
+          {customModelFacets && (
+            <div className=" w-1/2">
+              <Listbox value={selectedModel} onChange={setSelectedModel}>
                 <div className="relative mt-1">
                   <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
-                    <span className="block truncate">{selected}</span>
+                    <span className="block truncate">{selectedModel}</span>
                     <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                       <ChevronUpDownIcon
                         className="h-5 w-5 text-gray-400"
@@ -178,16 +183,18 @@ const Inner = ({ dm_directoryChildren, relativePrefixToRoot }: any) => {
                             }
                             value={person}
                           >
-                            {({ selected }) => (
+                            {({ selectedModel }) => (
                               <>
                                 <span
                                   className={`block truncate ${
-                                    selected ? "font-medium" : "font-normal"
+                                    selectedModel
+                                      ? "font-medium"
+                                      : "font-normal"
                                   }`}
                                 >
                                   {person}
                                 </span>
-                                {selected ? (
+                                {selectedModel ? (
                                   <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
                                     <CheckIcon
                                       className="h-5 w-5"
@@ -205,31 +212,72 @@ const Inner = ({ dm_directoryChildren, relativePrefixToRoot }: any) => {
                 </div>
               </Listbox>
             </div>
-          )} */}
-          <FilterSearch
-            placeholder="車種を検索"
-            searchOnSelect={true}
-            customCssClasses={{
-              filterSearchContainer: "w-1/2 h-14 mt-4 rounded-full",
-            }}
-            searchFields={[
-              { entityType: "ce_manual", fieldApiName: "c_carmodel" },
-            ]}
-          />
-          <FilterSearch
-            placeholder="製造年を検索"
-            customCssClasses={{
-              filterSearchContainer: "w-1/2 h-14 mt-4 rounded-full",
-            }}
-            searchOnSelect={true}
-            searchFields={[
-              {
-                entityType: "ce_manual",
-                fieldApiName: "c_production_years",
-              },
-            ]}
-          ></FilterSearch>
+          )}
+          {selectedYears && (
+            <div className="w-1/2">
+              <Listbox value={selectedYears} onChange={setSelectedYears}>
+                <div className="relative mt-1">
+                  <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+                    <span className="block truncate">{selectedYears}</span>
+                    <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                      <ChevronUpDownIcon
+                        className="h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </Listbox.Button>
+                  <Transition
+                    as={Fragment}
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
+                      {customYearFacets.map((person, personIdx) => {
+                        return (
+                          <Listbox.Option
+                            key={personIdx}
+                            className={({ active }) =>
+                              `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                                active
+                                  ? "bg-amber-100 text-amber-900"
+                                  : "text-gray-900"
+                              }`
+                            }
+                            value={person}
+                          >
+                            {({ selectedYears }) => (
+                              <>
+                                <span
+                                  className={`block truncate ${
+                                    selectedModel
+                                      ? "font-medium"
+                                      : "font-normal"
+                                  }`}
+                                >
+                                  {person}
+                                </span>
+                                {selectedYears ? (
+                                  <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                                    <CheckIcon
+                                      className="h-5 w-5"
+                                      aria-hidden="true"
+                                    />
+                                  </span>
+                                ) : null}
+                              </>
+                            )}
+                          </Listbox.Option>
+                        );
+                      })}
+                    </Listbox.Options>
+                  </Transition>
+                </div>
+              </Listbox>
+            </div>
+          )}
         </div>
+
         {!showDir && (
           <>
             <div className={`w-full `}>

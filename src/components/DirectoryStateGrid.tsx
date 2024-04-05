@@ -42,7 +42,7 @@ const DirectoryStateGrid = ({
         >
           <div key="uRL" className="font-bold text-[#202020] ">
             <img src={img} alt="" />
-            {child.name} ({child.dm_childEntityIds?.length || 0})
+            {child.name}
           </div>
         </a>
       );

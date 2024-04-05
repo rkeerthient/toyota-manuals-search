@@ -1,11 +1,10 @@
 import { useChatState } from "@yext/chat-headless-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect } from "react";
 import { FaMagic } from "react-icons/fa";
 import { useChatModeContext } from "../hooks";
 import { cn } from "../utils/cn";
-import { useEffect } from "react";
 import MessageCard from "./cards/MessageCard";
-import { HandThumbUpIcon } from "@heroicons/react/20/solid";
 
 export default function AiAnswer() {
   const messages = useChatState((s) => s.conversation.messages);
@@ -45,10 +44,10 @@ export default function AiAnswer() {
                 animate="end"
                 transition={{
                   repeatDelay: 1,
-                  delay: index * 0.25, // Delay each animation by 0.25s
-                  duration: 1, // Animation duration
-                  repeat: Infinity, // To loop the animation
-                  ease: "linear", // To move at a constant speed
+                  delay: index * 0.25,
+                  duration: 1,
+                  repeat: Infinity,
+                  ease: "linear",
                 }}
               />
             </motion.div>
