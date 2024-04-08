@@ -169,7 +169,7 @@ export const SearchPane = () => {
             },
           ]),
         searchActions.executeVerticalQuery().then(() => {
-          localStorage.clear();
+          // localStorage.clear();
           setIsLoading(false);
         }))
       : (searchActions.setUniversal(),
