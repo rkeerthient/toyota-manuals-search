@@ -35,6 +35,7 @@ import { useChatActions, useChatState } from "@yext/chat-headless-react";
 import { useChatModeContext } from "../hooks";
 import AiAnswer from "../components/AiAnswer";
 import { cn } from "../utils/cn";
+import ManualVector from "../components/cards/ManualVector";
 
 export const config: TemplateConfig = {
   name: "search",
@@ -81,8 +82,8 @@ const verticals = [
   },
   {
     name: "Manuals(Vector)",
-    verticalKey: "manual_vertical",
-    cardType: ManualLexical,
+    verticalKey: "manual_vector",
+    cardType: ManualVector,
     classes: "",
   },
 ];
@@ -100,7 +101,10 @@ const SearchWrapper: Template<
 export default SearchWrapper;
 
 const verticalLimit: UniversalLimit = {
-  files: 4,
+  faqs: 8,
+  manual: 5,
+  manual_lexical: 5,
+  manual_vector: 5,
 };
 
 export const SearchPane = () => {
@@ -195,7 +199,6 @@ export const SearchPane = () => {
           ]),
         searchActions.setUniversalLimit(verticalLimit),
         searchActions.executeUniversalQuery().then(() => {
-          // localStorage.clear();
           setIsLoading(false);
         }));
   }, [currentVertical, searchTerm]);
@@ -336,7 +339,7 @@ export const SearchPane = () => {
                       },
                       manual_vector: {
                         SectionComponent: FlexSection,
-                        CardComponent: ManualLexical,
+                        CardComponent: ManualVector,
                         label: "Manual (Vector)",
                         viewAllButton: true,
                       },

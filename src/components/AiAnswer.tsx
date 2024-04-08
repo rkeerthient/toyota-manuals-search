@@ -11,6 +11,9 @@ export default function AiAnswer() {
   const firstBotMessage = messages.find((m) => m.source === "BOT");
   const isLoading = useChatState((s) => s.conversation.isLoading);
   const { chatMode } = useChatModeContext();
+  const chatGoal = useChatState(
+    (state) => state.conversation.notes?.currentGoal
+  );
 
   useEffect(() => {
     const chatbox = document.getElementById("results");
@@ -32,7 +35,6 @@ export default function AiAnswer() {
               key={`bigdiv-${index}`}
               className={cn(" h-4 w-full overflow-hidden px-10")}
             >
-              {/* The light beam div */}
               <motion.div
                 key={`lildiv-${index}`}
                 className=" bottom-0 left-0 top-0 w-full bg-gradient-to-r from-white to-blue-300"
@@ -54,7 +56,7 @@ export default function AiAnswer() {
           ))}
         </div>
       )}
-      {firstBotMessage && (
+      {firstBotMessage && chatGoal !== "NO_GOAL" && (
         <MessageCard message={firstBotMessage} idx={0} initial={true} />
       )}
       <AnimatePresence>
