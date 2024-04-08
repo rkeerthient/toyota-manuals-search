@@ -95,19 +95,18 @@ const Index: Template<TemplateRenderProps> = ({
     </>
   );
 };
-//2012年03月～2016年06月
 const Inner = ({ dm_directoryChildren, relativePrefixToRoot }: any) => {
   const [showDir, setShowDir] = useState<boolean>(true);
   const searchActions = useSearchActions();
   useSearchState((state) => state.filters);
   const [customModelFacets, setCustomModelFacets] = useState<string[]>([
-    "Select Car",
+    "車種を検索",
   ]);
   const [customYearFacets, setCustomYearFacets] = useState<string[]>([]);
   const isLoading =
     useSearchState((state) => state.searchStatus.isLoading) || false;
-  const [selectedModel, setSelectedModel] = useState<string>("Select Car");
-  const [selectedYears, setSelectedYears] = useState<string>("Select Years");
+  const [selectedModel, setSelectedModel] = useState<string>("車種を検索");
+  const [selectedYears, setSelectedYears] = useState<string>("製造年を検索");
 
   useEffect(() => {
     const names = dm_directoryChildren.flatMap((item: any) => item.name);
@@ -125,7 +124,7 @@ const Inner = ({ dm_directoryChildren, relativePrefixToRoot }: any) => {
   }, [selectedModel]);
 
   useEffect(() => {
-    if (selectedModel !== "Select Car" && selectedYears != "Select Years") {
+    if (selectedModel !== "車種を検索" && selectedYears != "製造年を検索") {
       searchActions.setVertical("manual");
       searchActions.setQuery(`${selectedModel}, ${selectedYears}`);
       searchActions.executeVerticalQuery().then((res) => setShowDir(false));
@@ -140,8 +139,8 @@ const Inner = ({ dm_directoryChildren, relativePrefixToRoot }: any) => {
 
       setShowDir(!y || false);
       if (!showDir) {
-        setSelectedModel("Select Car");
-        setSelectedYears("Select Year");
+        setSelectedModel("車種を検索");
+        setSelectedYears("製造年を検索");
       }
     }
   }, [searchActions.state.filters.facets]);

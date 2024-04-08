@@ -79,6 +79,12 @@ const verticals = [
     cardType: ManualLexical,
     classes: "",
   },
+  {
+    name: "Manuals(Vector)",
+    verticalKey: "manual_vertical",
+    cardType: ManualLexical,
+    classes: "",
+  },
 ];
 const SearchWrapper: Template<
   TemplateRenderProps
@@ -326,6 +332,12 @@ export const SearchPane = () => {
                         SectionComponent: FlexSection,
                         CardComponent: ManualLexical,
                         label: "Manual (Lexical)",
+                        viewAllButton: true,
+                      },
+                      manual_vector: {
+                        SectionComponent: FlexSection,
+                        CardComponent: ManualLexical,
+                        label: "Manual (Vector)",
                         viewAllButton: true,
                       },
                     }}
