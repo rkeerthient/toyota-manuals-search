@@ -10,6 +10,7 @@ import {
   Matcher,
   UniversalLimit,
   useSearchActions,
+  useSearchState,
 } from "@yext/search-headless-react";
 import {
   AppliedFilters,
@@ -117,6 +118,8 @@ export const SearchPane = () => {
   const { chatMode, setChatMode } = useChatModeContext();
   const messages = useChatState((s) => s.conversation.messages);
   const [hasSearched, setHasSearched] = useState(false);
+  const appliedFacets = useSearchState((state) => state.filters.facets);
+  const appliedFilters = useSearchState((state) => state.filters.static);
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
@@ -203,6 +206,24 @@ export const SearchPane = () => {
         }));
   }, [currentVertical, searchTerm]);
 
+  // useEffect(() => {
+  //   console.log(
+  //     "inn",
+  //     searchActions.state.filters.facets,
+  //     searchActions.state.filters.static
+  //   );
+
+  //   searchActions.state.filters.static && localStorage.clear();
+  // }, [searchActions.state]);
+
+  const handleClear = () => {
+    localStorage.clear();
+    setIsLoading(true);
+    searchActions.resetFacets();
+    searchActions.setStaticFilters([]);
+    searchActions.executeVerticalQuery().then((res) => setIsLoading(false));
+  };
+
   const handleSearch: onSearchFunc = (searchEventData) => {
     setHasSearched(true);
     const { query } = searchEventData;
@@ -273,8 +294,16 @@ export const SearchPane = () => {
                     <div className="hidden md:flex w-full items-baseline justify-between">
                       <ResultsCount />
                     </div>
-                    <div className="flex justify-between mb-4">
-                      <AppliedFilters />
+                    <div className="flex items-center">
+                      <AppliedFilters
+                        customCssClasses={{ clearAllButton: "hidden" }}
+                      />
+                      <div
+                        onClick={handleClear}
+                        className={`hover:cursor-pointer text-sm font-medium text-primary hover:underline focus:underline mb-4 ${appliedFacets?.length || appliedFilters?.length ? "block" : "hidden"}`}
+                      >
+                        Clear All
+                      </div>
                     </div>
                     <div className="flex flex-col space-y-4 ">
                       <VerticalResults
